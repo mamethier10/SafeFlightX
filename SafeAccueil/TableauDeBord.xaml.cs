@@ -1,0 +1,326 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace SafeAccueil
+{
+    /// <summary>
+    /// Logique d'interaction pour TableauDeBord.xaml
+    /// </summary>
+    public partial class TableauDeBord : Window
+    {
+        public TableauDeBord()
+        {
+            InitializeComponent();
+            LoadData();
+        }
+
+
+        private void GestionComptes(object sender, RoutedEventArgs e)
+        {
+            ShowContent(comptes);
+        }
+
+        private void GestionVols(object sender, RoutedEventArgs e)
+        {
+            ShowContent(vols);
+        }
+
+        private void GestionAirport(object sender, RoutedEventArgs e)
+        {
+            ShowContent(airport);
+        }
+
+        private void GestionSignaux(object sender, RoutedEventArgs e)
+        {
+            ShowContent(signaux);
+        }
+
+        private void ListDefinitive(object sender, RoutedEventArgs e)
+        {
+            ShowContent(listDif);
+        }
+
+        private void ListSuspect(object sender, RoutedEventArgs e)
+        {
+            ShowContent(listSuspect);
+        }
+
+        private void ShowContent(UIElement content)
+        {
+            comptes.Visibility = Visibility.Collapsed;
+            vols.Visibility = Visibility.Collapsed;
+            airport.Visibility = Visibility.Collapsed;
+            signaux.Visibility = Visibility.Collapsed;
+            listDif.Visibility = Visibility.Collapsed;
+            listSuspect.Visibility = Visibility.Collapsed;
+            DefaultContent.Visibility = Visibility.Collapsed;
+
+            content.Visibility = Visibility.Visible;
+        }
+
+
+        private DataTable GetAgentData()
+        {
+            DataTable dataTable = new DataTable();
+
+            ConnexionDB con = new ConnexionDB();
+            con.OpenConnexion();
+
+            string query = "SELECT Id_agent, mot_de_pass,prenom,nom,type FROM agent";
+            SqlCommand command = new SqlCommand(query, con.OpenConnexion());
+
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+            dataAdapter.Fill(dataTable);
+
+
+
+            return dataTable;
+        }
+
+        //méthode pour charger le contenu de la table agent dans le tableau
+        private void LoadData()
+        {
+            DataTable agentData = GetAgentData();
+
+            userTab.ItemsSource = agentData.DefaultView;
+        }
+
+        //Pour gerer les elements du tableau selectionnés
+        private void UserGridSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            if (userTab.SelectedItem != null)
+            {
+                DataRowView ligne = (DataRowView)userTab.SelectedItem;
+
+                idUser.Text = ligne["Id_agent"].ToString();
+                password.Password = ligne["mot_de_pass"].ToString();
+                passwordConfirm.Password = ligne["mot_de_pass"].ToString();
+                prenom.Text = ligne["prenom"].ToString();
+                nom.Text = ligne["nom"].ToString();
+                type.Text = ligne["type"].ToString();
+
+            }
+        }
+
+        //méthode pour actualiser le tableau
+        private void Datactualiser(object sender, RoutedEventArgs e)
+        {
+            LoadData();
+            idUser.Text = "";
+            prenom.Text = "";
+            nom.Text = "";
+            password.Password = "";
+            passwordConfirm.Password = "";
+            type.Text = "Choisir un rôle...";
+        }
+
+        //Méthode pour ajouter un nouveau utilisateur dans la table agent.
+        private void AddUser(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(idUser.Text) && !string.IsNullOrEmpty(prenom.Text) && !string.IsNullOrEmpty(nom.Text)
+                && !string.IsNullOrEmpty(password.Password) && !string.IsNullOrEmpty(type.Text) && !string.IsNullOrEmpty(passwordConfirm.Password))
+            {
+                string id = idUser.Text.Trim();
+                string motdepass = password.Password.Trim();
+                string prenoms = prenom.Text.Trim();
+                string noms = nom.Text.Trim();
+                string confirm = passwordConfirm.Password.Trim();
+                string typ = type.Text.Trim();
+                if (motdepass == confirm && (id.Length > 4) && typ != "Choisir un rôle..." && motdepass.Length > 5)
+                {
+                    try
+                    {
+                        ConnexionDB con = new ConnexionDB();
+                        con.OpenConnexion();
+                        string query = "INSERT INTO agent (Id_agent, mot_de_pass, prenom,nom,type)" +
+                            " VALUES (@id, @motdepass, @prenoms, @noms,@typ)";
+                        SqlCommand cmd = new SqlCommand(query, con.OpenConnexion());
+
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@motdepass", motdepass);
+                        cmd.Parameters.AddWithValue("@prenoms", prenoms);
+                        cmd.Parameters.AddWithValue("@noms", noms);
+                        cmd.Parameters.AddWithValue("@typ", typ);
+                        int n = cmd.ExecuteNonQuery();
+                        if (n > 0)
+                        {
+                            MessageBox.Show("L'utilisateur à été ajouté avec succés!");
+                            LoadData();
+                            idUser.Text = "";
+                            prenom.Text = "";
+                            nom.Text = "";
+                            password.Password = "";
+                            passwordConfirm.Password = "";
+                            type.Text = "Choisir un rôle...";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Une erreur est survenue" + ex.Message);
+                    }
+
+                }
+                else
+                {
+                    if (motdepass != confirm)
+                        MessageBox.Show("Les deux mots de passe ne correspondent pas!");
+                    if (id.Length <= 4)
+                        MessageBox.Show("L'identifiant doit être supérieur à 4 lettres.");
+                    if (typ == "Choisir un rôle...")
+                        MessageBox.Show("Veuiller choisir un rôle!");
+                    if (motdepass.Length <= 5)
+                        MessageBox.Show("Le mot de pass doit être supérieur à 5 caractère!");
+
+                }
+            } else
+            {
+                MessageBox.Show("Veuiller remplir tous les champs!");
+            }
+        }
+
+        //Méthode pour supprimer un utilisateur.
+        private void DeleteUser(object sender, RoutedEventArgs e)
+        {
+            string iduser = idUser.Text.Trim();
+            if (iduser.Length > 0)
+            {
+
+                try
+                {
+                    ConnexionDB con = new ConnexionDB();
+                    con.OpenConnexion();
+                    string query = "DELETE FROM agent WHERE Id_agent=@iduser";
+                    SqlCommand com = new SqlCommand(query, con.OpenConnexion());
+                    com.Parameters.AddWithValue("@iduser", iduser);
+                    int n = com.ExecuteNonQuery();
+                    if (n > 0)
+                    {
+                        MessageBox.Show("L'utilisateur a été supprimé avec succés!");
+                        LoadData();
+                        idUser.Text = "";
+                        prenom.Text = "";
+                        nom.Text = "";
+                        password.Password = "";
+                        passwordConfirm.Password = "";
+                        type.Text = "Choisir un rôle...";
+                    }
+                    else
+                    {
+                        MessageBox.Show("Aucun utilisateur trouvé avec l'ID spécifié.");
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show("Une erreur est survenue : " + ex.Message);
+                }
+            }
+            else
+                MessageBox.Show("Veuiller saisir l'identifiant de l'utilisateur à supprimer");
+        }
+        //Mise à jour d'utilisateur
+        private void UpdateUser(object sender, RoutedEventArgs e)
+        {
+            DataRowView ligne = (DataRowView)userTab.SelectedItem;
+
+            string a = ligne["Id_agent"].ToString();
+            if (!string.IsNullOrEmpty(idUser.Text) && !string.IsNullOrEmpty(prenom.Text) && !string.IsNullOrEmpty(nom.Text)
+                && !string.IsNullOrEmpty(password.Password) && !string.IsNullOrEmpty(type.Text) && !string.IsNullOrEmpty(passwordConfirm.Password))
+            {
+                string id = idUser.Text.Trim();
+                string motdepass = password.Password.Trim();
+                string prenoms = prenom.Text.Trim();
+                string noms = nom.Text.Trim();
+                string confirm = passwordConfirm.Password.Trim();
+                string typ = type.Text.Trim();
+                if (motdepass == confirm && (id.Length > 4) && typ != "Choisir un rôle..." && motdepass.Length > 5)
+                {
+                    try
+                    {
+                        ConnexionDB con = new ConnexionDB();
+                        con.OpenConnexion();
+                        string query = "UPDATE agent SET Id_agent=@id, prenom=@prenoms,nom=@noms," +
+                                       "mot_de_pass=@motdepass, type=@typ WHERE Id_agent=@a";
+                        SqlCommand cmd = new SqlCommand(query, con.OpenConnexion());
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@motdepass", motdepass);
+                        cmd.Parameters.AddWithValue("@prenoms", prenoms);
+                        cmd.Parameters.AddWithValue("@noms", noms);
+                        cmd.Parameters.AddWithValue("@typ", typ);
+                        cmd.Parameters.AddWithValue("@a", a);
+                        int n = cmd.ExecuteNonQuery();
+                        if (n > 0)
+                        {
+                            MessageBox.Show("Modification réussie!");
+                            LoadData();
+                            idUser.Text = "";
+                            prenom.Text = "";
+                            nom.Text = "";
+                            password.Password = "";
+                            passwordConfirm.Password = "";
+                            type.Text = "Choisir un rôle...";
+                        }
+                        else
+                            MessageBox.Show("Modification non réussie!");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Une erreur est survenue!" + ex.Message);
+                    }
+                }
+                else
+                {
+                    if (motdepass != confirm)
+                        MessageBox.Show("Les deux mots de passe ne correspondent pas!");
+                    if (id.Length <= 4)
+                        MessageBox.Show("L'identifiant doit être supérieur à 4 lettres.");
+                    if (typ == "Choisir un rôle...")
+                        MessageBox.Show("Veuiller choisir un rôle!");
+                    if (motdepass.Length <= 5)
+                        MessageBox.Show("Le mot de pass doit être supérieur à 5 caractère!");
+                }
+            }
+            else
+                MessageBox.Show("Veuiller remplir les champs!");
+        }
+        
+        //Méthode pour ajouter un aéroport
+        private void AddAirport(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        //Méthode pour mettre à jour un aéroport.
+        private void UpdatAirport(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        //Méthode pour supprimer un aéroport.
+        private void DeleteAirport(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        //Méthode pour actualiser le tableau des aéroports.
+        private void ActualiserAirport(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
+}
+

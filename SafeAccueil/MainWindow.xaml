@@ -1,0 +1,66 @@
+﻿<Window x:Class="SafeAccueil.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SafeAccueil"
+        mc:Ignorable="d"
+        Title="Connexion" Height="460" Width="810"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" ></RowDefinition>
+            <RowDefinition ></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Rectangle Grid.Row="1" Fill="#FDFBFB"/>
+
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text=" Connexion " FontWeight="Bold" FontSize="30"
+                  HorizontalAlignment="Center" Margin="50,10,0,0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,40,0,0">
+                    <Label Content="    Identifiant:     " FontSize="14"/>
+
+                    <TextBox Name="chIndentifiant" Width="212" Margin="0,0,0,0" BorderBrush="#BCC7FF"
+                             VerticalAlignment="center" Padding="5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <Label Content="Mot de passe:    " FontSize="14"/>
+
+                    <PasswordBox Name="chPassword" Width="212" Margin="0,0,0,0" BorderBrush="#BCC7FF"
+                                 VerticalAlignment="Center" Padding="5" FontStretch="Normal"
+                                 />
+
+                </StackPanel>
+                
+                <!--creation des button de connexion et d'annulation-->
+                
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="bntConnexion"  Content="Se connecter" 
+                            Height="37" Width="102" Margin="115,20,15,0"  Click="ConnexionClick"/>
+                    <Button x:Name="btnAnnuler"  Content="Annuler" 
+                            Height="37" Width="102" Margin="0,20,0,0"  Click="Annulation"/>
+
+
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+
+
+        <Rectangle Fill="#BCC7FF" />
+        <TextBlock Text="SafeFlightX" FontWeight="Bold"  FontSize="20"
+                   FontFamily="Inter" VerticalAlignment="center" Margin="60,0,0,0"
+                   FontStyle="Italic"/>
+        <Rectangle Fill="#BCC7FF" Grid.Row="2"/>
+        <Image Source="images\icon.png" Width="150" Height="50"  HorizontalAlignment="Right" 
+               Margin="0,0,40,0"/>
+        <TextBlock Text="© Gestion de documents de voyage version 1.0.0" Grid.Row="2"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="12" FontStyle="Italic" x:Name="copyright"/>
+
+
+    </Grid>
+</Window>
