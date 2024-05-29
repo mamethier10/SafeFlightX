@@ -79,7 +79,8 @@ namespace SafeAccueil
             ConnexionDB con = new ConnexionDB();
             con.OpenConnexion();
 
-            string query = "SELECT Id_agent, mot_de_pass,prenom,nom,type FROM agent";
+            string query = "SELECT id_agent, prenom_agent,nom_agent,nom_user," +
+                "password_agent,type_agent FROM agent";
             SqlCommand command = new SqlCommand(query, con.OpenConnexion());
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
@@ -106,20 +107,19 @@ namespace SafeAccueil
             {
                 DataRowView ligne = (DataRowView)userTab.SelectedItem;
 
-                idUser.Text = ligne["Id_agent"].ToString();
-                password.Password = ligne["mot_de_pass"].ToString();
-                passwordConfirm.Password = ligne["mot_de_pass"].ToString();
-                prenom.Text = ligne["prenom"].ToString();
-                nom.Text = ligne["nom"].ToString();
-                type.Text = ligne["type"].ToString();
+                //idUser.Text = ligne["id_agent"].ToString();
+                idUser.Text = ligne["nom_user"].ToString();
+                password.Password = ligne["password_agent"].ToString();
+                passwordConfirm.Password = ligne["password_agent"].ToString();
+                prenom.Text = ligne["prenom_agent"].ToString();
+                nom.Text = ligne["nom_agent"].ToString();
+                type.Text = ligne["type_agent"].ToString();
 
             }
         }
 
-        //méthode pour actualiser le tableau
-        private void Datactualiser(object sender, RoutedEventArgs e)
+        public void init()
         {
-            LoadData();
             idUser.Text = "";
             prenom.Text = "";
             nom.Text = "";
@@ -128,29 +128,40 @@ namespace SafeAccueil
             type.Text = "Choisir un rôle...";
         }
 
+        //méthode pour actualiser le tableau
+        private void Datactualiser(object sender, RoutedEventArgs e)
+        {
+            LoadData();
+            init();
+        }
+
         //Méthode pour ajouter un nouveau utilisateur dans la table agent.
         private void AddUser(object sender, RoutedEventArgs e)
         {
+            ConnexionDB con = new ConnexionDB();
+            con.OpenConnexion();
             if (!string.IsNullOrEmpty(idUser.Text) && !string.IsNullOrEmpty(prenom.Text) && !string.IsNullOrEmpty(nom.Text)
                 && !string.IsNullOrEmpty(password.Password) && !string.IsNullOrEmpty(type.Text) && !string.IsNullOrEmpty(passwordConfirm.Password))
+             
             {
-                string id = idUser.Text.Trim();
+                string nom_user = idUser.Text.Trim();
                 string motdepass = password.Password.Trim();
                 string prenoms = prenom.Text.Trim();
                 string noms = nom.Text.Trim();
                 string confirm = passwordConfirm.Password.Trim();
                 string typ = type.Text.Trim();
-                if (motdepass == confirm && (id.Length > 4) && typ != "Choisir un rôle..." && motdepass.Length > 5)
+                if (motdepass == confirm && (nom_user.Length > 4) && typ != "Choisir un rôle..." && motdepass.Length > 5
+                    && con.VerifExist(nom_user))
                 {
                     try
                     {
-                        ConnexionDB con = new ConnexionDB();
+                        
                         con.OpenConnexion();
-                        string query = "INSERT INTO agent (Id_agent, mot_de_pass, prenom,nom,type)" +
-                            " VALUES (@id, @motdepass, @prenoms, @noms,@typ)";
+                        string query = "INSERT INTO agent (prenom_agent,nom_agent,nom_user,password_agent,type_agent)" +
+                            " VALUES (@prenoms, @noms, @nom_user,@motdepass,@typ)";
                         SqlCommand cmd = new SqlCommand(query, con.OpenConnexion());
 
-                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@nom_user", nom_user);
                         cmd.Parameters.AddWithValue("@motdepass", motdepass);
                         cmd.Parameters.AddWithValue("@prenoms", prenoms);
                         cmd.Parameters.AddWithValue("@noms", noms);
@@ -160,12 +171,7 @@ namespace SafeAccueil
                         {
                             MessageBox.Show("L'utilisateur à été ajouté avec succés!");
                             LoadData();
-                            idUser.Text = "";
-                            prenom.Text = "";
-                            nom.Text = "";
-                            password.Password = "";
-                            passwordConfirm.Password = "";
-                            type.Text = "Choisir un rôle...";
+                            init();
                         }
                     }
                     catch (Exception ex)
@@ -178,13 +184,14 @@ namespace SafeAccueil
                 {
                     if (motdepass != confirm)
                         MessageBox.Show("Les deux mots de passe ne correspondent pas!");
-                    if (id.Length <= 4)
+                    if (nom_user.Length <= 4)
                         MessageBox.Show("L'identifiant doit être supérieur à 4 lettres.");
                     if (typ == "Choisir un rôle...")
                         MessageBox.Show("Veuiller choisir un rôle!");
                     if (motdepass.Length <= 5)
                         MessageBox.Show("Le mot de pass doit être supérieur à 5 caractère!");
-
+                    if (!con.VerifExist(nom_user))
+                        MessageBox.Show("Le nom utilisateur existe déja!");
                 }
             } else
             {
@@ -195,7 +202,9 @@ namespace SafeAccueil
         //Méthode pour supprimer un utilisateur.
         private void DeleteUser(object sender, RoutedEventArgs e)
         {
-            string iduser = idUser.Text.Trim();
+            DataRowView ligne = (DataRowView)userTab.SelectedItem;
+            string iduser = ligne["id_agent"].ToString();
+                //idUser.Text.Trim();
             if (iduser.Length > 0)
             {
 
@@ -203,7 +212,7 @@ namespace SafeAccueil
                 {
                     ConnexionDB con = new ConnexionDB();
                     con.OpenConnexion();
-                    string query = "DELETE FROM agent WHERE Id_agent=@iduser";
+                    string query = "DELETE FROM agent WHERE id_agent=@iduser";
                     SqlCommand com = new SqlCommand(query, con.OpenConnexion());
                     com.Parameters.AddWithValue("@iduser", iduser);
                     int n = com.ExecuteNonQuery();
@@ -211,12 +220,7 @@ namespace SafeAccueil
                     {
                         MessageBox.Show("L'utilisateur a été supprimé avec succés!");
                         LoadData();
-                        idUser.Text = "";
-                        prenom.Text = "";
-                        nom.Text = "";
-                        password.Password = "";
-                        passwordConfirm.Password = "";
-                        type.Text = "Choisir un rôle...";
+                        init();
                     }
                     else
                     {
@@ -241,22 +245,22 @@ namespace SafeAccueil
             if (!string.IsNullOrEmpty(idUser.Text) && !string.IsNullOrEmpty(prenom.Text) && !string.IsNullOrEmpty(nom.Text)
                 && !string.IsNullOrEmpty(password.Password) && !string.IsNullOrEmpty(type.Text) && !string.IsNullOrEmpty(passwordConfirm.Password))
             {
-                string id = idUser.Text.Trim();
+                string nom_user = idUser.Text.Trim();
                 string motdepass = password.Password.Trim();
                 string prenoms = prenom.Text.Trim();
                 string noms = nom.Text.Trim();
                 string confirm = passwordConfirm.Password.Trim();
                 string typ = type.Text.Trim();
-                if (motdepass == confirm && (id.Length > 4) && typ != "Choisir un rôle..." && motdepass.Length > 5)
+                if (motdepass == confirm && (nom_user.Length > 4) && typ != "Choisir un rôle..." && motdepass.Length > 5)
                 {
                     try
                     {
                         ConnexionDB con = new ConnexionDB();
                         con.OpenConnexion();
-                        string query = "UPDATE agent SET Id_agent=@id, prenom=@prenoms,nom=@noms," +
-                                       "mot_de_pass=@motdepass, type=@typ WHERE Id_agent=@a";
+                        string query = "UPDATE agent SET prenom_agent=@prenoms,nom_agent=@noms," +
+                                       "nom_user=@nom_user,password_agent=@motdepass, type_agent=@typ WHERE id_agent=@a";
                         SqlCommand cmd = new SqlCommand(query, con.OpenConnexion());
-                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.Parameters.AddWithValue("@nom_user", nom_user);
                         cmd.Parameters.AddWithValue("@motdepass", motdepass);
                         cmd.Parameters.AddWithValue("@prenoms", prenoms);
                         cmd.Parameters.AddWithValue("@noms", noms);
@@ -267,12 +271,7 @@ namespace SafeAccueil
                         {
                             MessageBox.Show("Modification réussie!");
                             LoadData();
-                            idUser.Text = "";
-                            prenom.Text = "";
-                            nom.Text = "";
-                            password.Password = "";
-                            passwordConfirm.Password = "";
-                            type.Text = "Choisir un rôle...";
+                            init();
                         }
                         else
                             MessageBox.Show("Modification non réussie!");
@@ -286,7 +285,7 @@ namespace SafeAccueil
                 {
                     if (motdepass != confirm)
                         MessageBox.Show("Les deux mots de passe ne correspondent pas!");
-                    if (id.Length <= 4)
+                    if (nom_user.Length <= 4)
                         MessageBox.Show("L'identifiant doit être supérieur à 4 lettres.");
                     if (typ == "Choisir un rôle...")
                         MessageBox.Show("Veuiller choisir un rôle!");

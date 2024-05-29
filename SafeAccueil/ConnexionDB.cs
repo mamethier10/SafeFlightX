@@ -40,5 +40,17 @@ namespace SafeAccueil
                 Console.WriteLine("Erreur lors de la fermeture de la connexion "+ex.Message);
             }
         }
+        public bool VerifExist(string nom_user)
+        {
+            
+            string reqete = "SELECT * FROM agent WHERE nom_user=@nom_user";
+            SqlCommand com = new SqlCommand(reqete,OpenConnexion());
+            com.Parameters.AddWithValue("@nom_user", nom_user);
+            int n = com.ExecuteNonQuery();
+            if (n >= 1) 
+                return true;
+            else
+                return false;
+        }
     }
 }

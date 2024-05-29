@@ -38,7 +38,7 @@ namespace SafeAccueil
                 ConnexionDB con = new ConnexionDB();
                 con.OpenConnexion();
                 SqlCommand commande = new SqlCommand("SELECT COUNT(*) FROM agent WHERE " +
-                                "Id_agent = @idAgent AND mot_de_pass = @passwordAgent",con.OpenConnexion());
+                                "nom_user = @idAgent AND password_agent = @passwordAgent",con.OpenConnexion());
                 commande.Parameters.AddWithValue("@idAgent", idAgent);
                 commande.Parameters.AddWithValue("@passwordAgent", passwordAgent);
                 int nombreResultats = (int)commande.ExecuteScalar();

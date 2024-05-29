@@ -62,26 +62,33 @@
                                HorizontalAlignment="Center"  />
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="30">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,50,0,0" >
+                            <Label Content="Nom d'utilisateur:"/>
                             <TextBox x:Name="idUser" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Prénom:"/>
                             <TextBox x:Name="prenom" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Nom:"/>
                             <TextBox x:Name="nom" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Rôle:"/>
                             <ComboBox x:Name="type" Margin="0,0,0,20" Width="200" Padding="5">
                                 <ComboBoxItem Content="Choisir un rôle..." IsSelected="True" IsEnabled="False" />
                                 <ComboBoxItem Content="Agent"/>
                                 <ComboBoxItem Content="Superviseur"/>
                                 <ComboBoxItem Content="Administrateur"/>
                             </ComboBox>
+                            <Label Content="Mot de passe:"/>
                             <PasswordBox x:Name="password" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Confirmation:"/>
                             <PasswordBox x:Name="passwordConfirm" Width="200" Padding="5" HorizontalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel VerticalAlignment="Top" Margin="40,20,0,0" >
                             <DataGrid x:Name="userTab"  Width="800" AutoGenerateColumns="False" SelectionChanged="UserGridSelectionChanged" >
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Identifiant" Binding= "{Binding Id_agent}" Width="*"/>
-                                    <DataGridTextColumn Header="Mot de passe" Binding= "{Binding mot_de_pass}" Width="*"/>
-                                    <DataGridTextColumn Header="Prénom" Binding= "{Binding prenom}" Width="*"/>
-                                    <DataGridTextColumn Header="Nom" Binding= "{Binding nom}" Width="*"/>
-                                    <DataGridTextColumn Header="Rôle" Binding= "{Binding type}" Width="*"/>
+                                    <DataGridTextColumn Header="ID" Binding= "{Binding id_agent}" Width="*"/>
+                                    <DataGridTextColumn Header="Prénom" Binding= "{Binding prenom_agent}" Width="*"/>
+                                    <DataGridTextColumn Header="Nom" Binding= "{Binding nom_agent}" Width="*"/>
+                                    <DataGridTextColumn Header="Nom user" Binding= "{Binding nom_user}" Width="*"/>
+                                    <DataGridTextColumn Header="Mot de passe" Binding= "{Binding password_agent}" Width="*"/>
+                                    <DataGridTextColumn Header="Rôle" Binding= "{Binding type_agent}" Width="*"/>
                                     
                                    
                                 </DataGrid.Columns>
@@ -146,16 +153,17 @@
                                HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="30">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,50,0,0" >
-                            <TextBox x:Name="idAirport" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Nom aéroport:"/>
                             <TextBox x:Name="nomAirport" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Ville aéroport:"/>
                             <TextBox x:Name="villeAirport" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                         </StackPanel>
                         
                         <StackPanel VerticalAlignment="Top" Margin="40,20,0,0" >
                             <DataGrid x:Name="airportTab"  Width="800" AutoGenerateColumns="False" SelectionChanged="UserGridSelectionChanged" >
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Identifiant" Binding= "{Binding Id_airport}" Width="*"/>
-                                    <DataGridTextColumn Header="Nom aéroport" Binding= "{Binding nom}" Width="*"/>
+                                    <DataGridTextColumn Header="ID aéroport" Binding= "{Binding id_airport}" Width="*"/>
+                                    <DataGridTextColumn Header="Nom aéroport" Binding= "{Binding nom_aeroport}" Width="*"/>
                                     <DataGridTextColumn Header="Ville aéroport" Binding= "{Binding ville}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -215,18 +223,22 @@
                               Width="100" Padding="5" Height="20"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="30">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,50,0,0" >
+                            <Label Content="ID voyageur"/>
                             <TextBox x:Name="idVoyageur" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Prénom"/>
                             <TextBox x:Name="prenomVoyageur" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Nom"/>
                             <TextBox x:Name="nomVoyageur" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Destination"/>
                             <TextBox x:Name="destination" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                         </StackPanel>
 
                         <StackPanel VerticalAlignment="Top" Margin="40,30,0,0" >
                             <DataGrid x:Name="voyageurTab"  Width="800" AutoGenerateColumns="False" SelectionChanged="UserGridSelectionChanged" >
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Identifiant" Binding= "{Binding Id_voyageur}" Width="*"/>
-                                    <DataGridTextColumn Header="Prénom" Binding= "{Binding prenomVoyageur}" Width="*"/>
-                                    <DataGridTextColumn Header="Nom" Binding= "{Binding nomVoyageur}" Width="*"/>
+                                    <DataGridTextColumn Header="Identifiant" Binding= "{Binding id_voy}" Width="*"/>
+                                    <DataGridTextColumn Header="Prénom" Binding= "{Binding prenom_voy}" Width="*"/>
+                                    <DataGridTextColumn Header="Nom" Binding= "{Binding nom_voy}" Width="*"/>
                                     <DataGridTextColumn Header="Destination" Binding= "{Binding destination}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
