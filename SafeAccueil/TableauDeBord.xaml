@@ -14,7 +14,7 @@
         
         <Grid.RowDefinitions>
             <RowDefinition Height="50" ></RowDefinition>
-            <RowDefinition ></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -23,7 +23,7 @@
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Rectangle Fill="#E0E1E7" Grid.Column="0"/>
 
@@ -101,7 +101,7 @@
                         <Button Content="Ajouter" Margin="0,0,15,0" Click="AddUser"/>
                         <Button Content="Modifier" Margin="0,0,15,0" Click="UpdateUser"/>
                         <Button Content="Supprimer" Margin="0,0,15,0" Click="DeleteUser"/>
-                        <Button Content="Actuliser" Click="Datactualiser" Margin="0,0,15,0"/>
+                        <Button Content="Actualiser" Click="Datactualiser" Margin="0,0,15,0"/>
                     </StackPanel>
 
                 </Grid>
@@ -115,7 +115,7 @@
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,50,0,0" >
                             <TextBox x:Name="codeVol" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                             <DatePicker x:Name="dateVol" Width="200"  HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <TextBox x:Name="hDepar" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <TextBox x:Name="hDepart" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                             <TextBox x:Name="hArrivee" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                             <TextBox x:Name="airportD" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                             <TextBox x:Name="airportA" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
@@ -130,7 +130,7 @@
                                     <DataGridTextColumn Header="Heure arrivée" Binding= "{Binding destinations}" Width="*"/>
                                     <DataGridTextColumn Header="Airport depart" Binding= "{Binding signaux}" Width="*"/>
                                     <DataGridTextColumn Header="Airport arrivée" Binding= "{Binding signaux}" Width="*"/>
-                                    <DataGridTextColumn Header="Escale" Binding= "{Binding signaux}" Width="*"/>
+                                    
                                 </DataGrid.Columns>
                             </DataGrid>
 
@@ -141,41 +141,47 @@
                         <Button Content="Ajouter" Margin="0,0,15,0" />
                         <Button Content="Modifier" Margin="0,0,15,0" />
                         <Button Content="Supprimer" Margin="0,0,15,0"/>
-                        <Button Content="Actuliser"  Margin="0,0,15,0"/>
+                        <Button Content="Actualiser"  Margin="0,0,15,0"/>
                     </StackPanel>
 
                 </Grid>
 
                 <!--Gestion des aéroports: affichage, modification, suppression enregistrer-->
 
-                <Grid x:Name="airport" Visibility="Collapsed">
+                <Grid x:Name="airport" Visibility="Collapsed" Width="Auto" Height="Auto">
                     <TextBlock Text="Gestion des aéroports" FontSize="20" FontWeight="Bold"
                                HorizontalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="30">
-                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,50,0,0" >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="30" >
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,0,0,0"
+                                    Width="200">
+                            <Label Content="Code aéroport:"/>
+                            <TextBox x:Name="codeAirport" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                             <Label Content="Nom aéroport:"/>
                             <TextBox x:Name="nomAirport" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <Label Content="Ville aéroport:"/>
-                            <TextBox x:Name="villeAirport" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Pays:"/>
+                            <TextBox x:Name="paysAirport" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                         </StackPanel>
-                        
-                        <StackPanel VerticalAlignment="Top" Margin="40,20,0,0" >
-                            <DataGrid x:Name="airportTab"  Width="800" AutoGenerateColumns="False" SelectionChanged="UserGridSelectionChanged" >
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID aéroport" Binding= "{Binding id_airport}" Width="*"/>
-                                    <DataGridTextColumn Header="Nom aéroport" Binding= "{Binding nom_aeroport}" Width="*"/>
-                                    <DataGridTextColumn Header="Ville aéroport" Binding= "{Binding ville}" Width="*"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
-
-                        </StackPanel>
-
+                        <ScrollViewer VerticalScrollBarVisibility="Visible"  >
+                            <StackPanel VerticalAlignment="Top" Margin="60,20,0,0" Height="Auto" Width="800">
+                            
+                                <DataGrid x:Name="airportTab" AutoGenerateColumns="False"
+                                          SelectionChanged="AirportGridSelectionChanged" Width="Auto">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="ID" Binding= "{Binding id_airport}" Width="*"/>
+                                        <DataGridTextColumn Header="Code aéroport" Binding= "{Binding code_aeroport}" Width="*"/>
+                                        <DataGridTextColumn Header="Nom aéroport" Binding= "{Binding nom_aeroport}" Width="*"/>
+                                        <DataGridTextColumn Header="Code Pays" Binding= "{Binding code_pays}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+     
+                            </StackPanel>
+                        </ScrollViewer>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="150,0,0,20">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="90,0,0,20">
                         <Button Content="Ajouter" Margin="0,0,15,0" Click="AddAirport"/>
                         <Button Content="Modifier" Margin="0,0,15,0" Click="UpdatAirport"/>
                         <Button Content="Supprimer" Margin="0,0,15,0" Click="DeleteAirport"/>
-                        <Button Content="Actuliser" Click="ActualiserAirport" Margin="0,0,15,0"/>
+                        <Button Content="Actualiser" Click="ActualiserAirport" Margin="0,0,15,0"/>
                     </StackPanel>
 
 
@@ -183,21 +189,21 @@
 
                 <!--Gestion des signaux: affichage, modification, suppression enregistrer-->
 
-                <Grid x:Name="signaux" Visibility="Collapsed">
+                <Grid x:Name="signaux" Visibility="Collapsed" Width="Auto">
                     <TextBlock Text="Gestion des signaux" FontSize="20" FontWeight="Bold"
                                HorizontalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="30">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,30,0,0" Width="900">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,100,0,0" >
-                            <TextBox x:Name="idSigne" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <TextBox x:Name="nomSigne" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Signe"/>
+                            <TextBox x:Name="nomSigne" Width="200" Padding="5" HorizontalAlignment="Center" />
                              
                         </StackPanel>
 
-                        <StackPanel VerticalAlignment="Top" Margin="40,20,0,0" >
-                            <DataGrid x:Name="SignauxTab"  Width="700" AutoGenerateColumns="False" SelectionChanged="UserGridSelectionChanged" >
+                        <StackPanel VerticalAlignment="Top" Width="700" Margin="50,20,0,0" >
+                            <DataGrid x:Name="SignauxTab"  Width="Auto" AutoGenerateColumns="False" SelectionChanged="SigneGridSelectionChanged" >
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Identifiant" Binding= "{Binding Id_airport}" Width="*"/>
-                                    <DataGridTextColumn Header="Signe" Binding= "{Binding nom}" Width="*"/>
+                                    <DataGridTextColumn Header="Identifiant" Binding= "{Binding id_signaux}" Width="*"/>
+                                    <DataGridTextColumn Header="Signe" Binding= "{Binding nom_signaux}" Width="*"/>
                                     
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -206,10 +212,10 @@
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="150,0,0,20">
-                        <Button Content="Ajouter" Margin="0,0,15,0"/>
-                        <Button Content="Modifier" Margin="0,0,15,0" />
-                        <Button Content="Supprimer" Margin="0,0,15,0"/>
-                        <Button Content="Actuliser" Margin="0,0,15,0"/>
+                        <Button Content="Ajouter" Margin="0,0,15,0" Click="AddSignaux"/>
+                        <Button Content="Modifier" Margin="0,0,15,0" Click="UpdateSignaux" />
+                        <Button Content="Supprimer" Margin="0,0,15,0" Click="DeleteSigne"/>
+                        <Button Content="Actualiser" Margin="0,0,15,0" Click="ActualiserSignaux"/>
                     </StackPanel>
                 </Grid>
 
@@ -250,7 +256,7 @@
                         <Button Content="Ajouter" Margin="0,0,15,0" />
                         <Button Content="Modifier" Margin="0,0,15,0" />
                         <Button Content="Supprimer" Margin="0,0,15,0"/>
-                        <Button Content="Actuliser"  Margin="0,0,15,0"/>
+                        <Button Content="Actualiser"  Margin="0,0,15,0"/>
                     </StackPanel>
                 </Grid>
 
@@ -287,7 +293,7 @@
                         <Button Content="Ajouter" Margin="0,0,15,0" />
                         <Button Content="Modifier" Margin="0,0,15,0" />
                         <Button Content="Supprimer" Margin="0,0,15,0"/>
-                        <Button Content="Actuliser"  Margin="0,0,15,0"/>
+                        <Button Content="Actualiser"  Margin="0,0,15,0"/>
                     </StackPanel>
 
                 </Grid>

@@ -40,6 +40,7 @@ namespace SafeAccueil
                 Console.WriteLine("Erreur lors de la fermeture de la connexion "+ex.Message);
             }
         }
+        // Méthode pour vérifier si un user exist déja ou pas
         public bool VerifExist(string nom_user)
         {
             
