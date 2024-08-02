@@ -19,8 +19,12 @@ namespace SafeAccueil
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    /// 
+
+   
+    public  partial class MainWindow : Window
     {
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -37,13 +41,16 @@ namespace SafeAccueil
                 string passwordAgent = chPassword.Password;
                 ConnexionDB con = new ConnexionDB();
                 con.OpenConnexion();
-                SqlCommand commande = new SqlCommand("SELECT COUNT(*) FROM agent WHERE " +
+                SqlCommand commande = new SqlCommand("SELECT  id_agent FROM agent WHERE " +
                                 "nom_user = @idAgent AND password_agent = @passwordAgent",con.OpenConnexion());
                 commande.Parameters.AddWithValue("@idAgent", idAgent);
                 commande.Parameters.AddWithValue("@passwordAgent", passwordAgent);
                 int nombreResultats = (int)commande.ExecuteScalar();
+                
                 if (nombreResultats > 0)
                 {
+                    IdentifiantAgent.identifiant = nombreResultats;
+    
                     TableauDeBord tab = new TableauDeBord();
                     this.Close();
                     tab.Show();

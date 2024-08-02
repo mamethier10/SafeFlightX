@@ -4,9 +4,10 @@
              xmlns:local="clr-namespace:SafeAccueil"
              xmlns:HelixToolkit="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
              xmlns:h="http://helix-toolkit.org/wpf"            
-             StartupUri="TableauDeBord.xaml">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+
+
         <!--style des button-->
         
         <Style  TargetType="Button">
@@ -26,7 +27,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
 
     </Application.Resources>
+    
     
 </Application>

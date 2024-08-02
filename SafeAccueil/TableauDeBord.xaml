@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SafeAccueil"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Tableau de bord" Height="450" Width="800"
         WindowStartupLocation="CenterScreen" Background="Transparent">
@@ -113,23 +114,45 @@
                                HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="30">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,50,0,0" >
+                            <Label Content="Nom du vol"/>
                             <TextBox x:Name="codeVol" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Date"/>
                             <DatePicker x:Name="dateVol" Width="200"  HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <TextBox x:Name="hDepart" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <TextBox x:Name="hArrivee" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <TextBox x:Name="airportD" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                            <TextBox x:Name="airportA" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                            <Label Content="Heure de départ" Margin="0,0,0,10"/>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="hdCombo" Width="45"/>
+                                <Label Content="Heure(s)"/>
+                                <ComboBox x:Name="mdCombo" Width="45"/>
+                                <Label Content="Minute(s)"/>
+                            </StackPanel>
+                            <Label Content="Heure d'arrivée" Margin="0,10,0,10"/>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="haCombo" Width="45"/>
+                                <Label Content="Heure(s)"/>
+                                <ComboBox x:Name="maCombo" Width="45"/>
+                                <Label Content="Minute(s)"/>
+                            </StackPanel>
+                            <Label Content="Aéroport départ" Margin="0,10,0,0"/>
+                            <ComboBox x:Name="nameComboBox1" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20">
+                            </ComboBox>
+                            <Label Content="Aéroport d'arrivée"/>
+                            <ComboBox Name="nameComboBox2" Width="200" Padding="5" HorizontalAlignment="Center" Margin="0,0,0,20" >
+                                
+                            </ComboBox>
+                            
                         </StackPanel>
 
                         <StackPanel VerticalAlignment="Top" Margin="40,30,0,0" >
-                            <DataGrid x:Name="Voltab"  Width="800" AutoGenerateColumns="False" SelectionChanged="UserGridSelectionChanged" >
+                            <DataGrid x:Name="volTab"  Width="800" AutoGenerateColumns="False" SelectionChanged="VolGridSelectionChanged" >
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Code_Vol" Binding= "{Binding Id_voysus}" Width="*"/>
-                                    <DataGridTextColumn Header="Date" Binding= "{Binding prenomVoysus}" Width="*"/>
-                                    <DataGridTextColumn Header="Heure Départ" Binding= "{Binding nomVoysus}" Width="*"/>
-                                    <DataGridTextColumn Header="Heure arrivée" Binding= "{Binding destinations}" Width="*"/>
-                                    <DataGridTextColumn Header="Airport depart" Binding= "{Binding signaux}" Width="*"/>
-                                    <DataGridTextColumn Header="Airport arrivée" Binding= "{Binding signaux}" Width="*"/>
+                                    
+                                    <DataGridTextColumn Header="ID" Binding = "{Binding id_vol}" Width="*"/>
+                                    <DataGridTextColumn Header="Nom du vol" Binding = "{Binding nom_vol}" Width="*"/>
+                                    <DataGridTextColumn Header="Date" Binding = "{Binding date_vol}" Width="*"/>
+                                    <DataGridTextColumn Header="Heure Départ" Binding = "{Binding h_depart}" Width="*"/>
+                                    <DataGridTextColumn Header="Heure arrivée" Binding = "{Binding h_arrivee}" Width="*"/>
+                                    <DataGridTextColumn Header="Airport depart" Binding = "{Binding airport_d}" Width="*"/>
+                                    <DataGridTextColumn Header="Airport arrivée" Binding = "{Binding airport_a}" Width="*"/>
                                     
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -138,10 +161,10 @@
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Margin="150,0,0,20">
-                        <Button Content="Ajouter" Margin="0,0,15,0" />
-                        <Button Content="Modifier" Margin="0,0,15,0" />
-                        <Button Content="Supprimer" Margin="0,0,15,0"/>
-                        <Button Content="Actualiser"  Margin="0,0,15,0"/>
+                        <Button Content="Ajouter" Margin="0,0,15,0" Click="AddVol"/>
+                        <Button Content="Modifier" Margin="0,0,15,0" Click="UpdateVol" />
+                        <Button Content="Supprimer" Margin="0,0,15,0" Click="DeleteVol"/>
+                        <Button Content="Actualiser"  Margin="0,0,15,0" Click="ActualiserVol"/>
                     </StackPanel>
 
                 </Grid>
